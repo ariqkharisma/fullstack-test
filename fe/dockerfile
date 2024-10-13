@@ -1,0 +1,32 @@
+# Use a lightweight Node.js image (adjust version if needed)
+FROM node:18-alpine AS builder
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json
+COPY package.json ./
+
+# Install dependencies (production mode for smaller image)
+RUN npm install
+
+# Copy remaining application files
+COPY . .
+
+# Build the Next.js application (production mode)
+RUN npx next build
+
+# Use a smaller Node.js image for serving (adjust version if needed)
+FROM builder AS runner
+
+# Set working directory
+WORKDIR /app
+
+# Copy production build from builder stage
+COPY --from=builder /app/.next .
+
+# Expose Next.js default port (adjust if needed)
+EXPOSE 3000
+
+# Start the Next.js server
+CMD [ "npx", "next", "start" ]

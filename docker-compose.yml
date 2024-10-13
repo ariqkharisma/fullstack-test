@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  be:
+    build: ./be
+    command: python appServer.py
+    ports:
+      - "8080:8000"
+    depends_on:
+      - fe
+
+  fe:
+    build: ./fe
+    command: npx next start
+    ports:
+      - "3300:3000"
+
+  postgresql:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: rahasia
+      POSTGRES_USER: postgres
+      POSTGRES_DB: database
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
