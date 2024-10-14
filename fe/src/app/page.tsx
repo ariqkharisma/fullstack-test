@@ -15,6 +15,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export default function Home() {
+  const url : string = process.env.NEXT_PUBLIC_BACKEND_URL ? process.env.NEXT_PUBLIC_BACKEND_URL + "/api/users" : "http://localhost:8000/api/users";
   const handleSubmit = async (values: {
     name: string;
     identityNumber: string;
@@ -22,7 +23,7 @@ export default function Home() {
     birthDate: dayjs.Dayjs;
   }) => {
     try {
-      const res = await axios.post("http://localhost:8000/api/users", {
+      const res = await axios.post(url, {
         name: values.name,
         identity_number: values.identityNumber.toString(),
         email: values.email,
