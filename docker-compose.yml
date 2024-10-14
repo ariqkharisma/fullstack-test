@@ -3,17 +3,19 @@ version: '3.8'
 services:
   be:
     build: ./be
-    command: python appServer.py
     ports:
-      - "8080:8000"
+      - "8001:8001"
     depends_on:
-      - fe
+      - postgresql
+    networks:
+      - app
 
   fe:
     build: ./fe
-    command: npx next start
     ports:
-      - "3300:3000"
+      - "3000:3000"
+    networks:
+      - app
 
   postgresql:
     image: postgres:latest
@@ -21,10 +23,17 @@ services:
       POSTGRES_PASSWORD: rahasia
       POSTGRES_USER: postgres
       POSTGRES_DB: database
+      TZ: 'Asia/Jakarta'
     ports:
       - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app
 
 volumes:
   postgres_data:
+
+networks:
+  app:
+    name: app
